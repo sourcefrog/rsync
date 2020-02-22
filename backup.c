@@ -277,11 +277,13 @@ int make_backup(const char *fname, BOOL prefer_rename)
 	/* Check to see if this is a device file, or link */
 	if ((am_root && preserve_devices && IS_DEVICE(file->mode))
 	 || (preserve_specials && IS_SPECIAL(file->mode))) {
-		if (do_mknod(buf, file->mode, sx.st.st_rdev) < 0)
+		if (do_mknod(buf, file->mode, sx.st.st_rdev) < 0) {
 			rsyserr(FERROR, errno, "mknod %s failed", full_fname(buf));
-		else if (DEBUG_GTE(BACKUP, 1))
+			ret = 0;
+		} else if (DEBUG_GTE(BACKUP, 1)) {
 			rprintf(FINFO, "make_backup: DEVICE %s successful.\n", fname);
-		ret = 2;
+			ret = 2;
+		}
 	}
 
 #ifdef SUPPORT_LINKS
@@ -294,11 +296,13 @@ int make_backup(const char *fname, BOOL prefer_rename)
 			}
 			ret = 2;
 		} else {
-			if (do_symlink(sl, buf) < 0)
+			if (do_symlink(sl, buf) < 0) {
 				rsyserr(FERROR, errno, "link %s -> \"%s\"", full_fname(buf), sl);
-			else if (DEBUG_GTE(BACKUP, 1))
+				ret = 0;
+			} else if (DEBUG_GTE(BACKUP, 1)) {
 				rprintf(FINFO, "make_backup: SYMLINK %s successful.\n", fname);
-			ret = 2;
+				ret = 2;
+			}
 		}
 	}
 #endif
