@@ -304,7 +304,7 @@ int make_backup(const char *fname, BOOL prefer_rename)
 #endif
 
 	if (!ret && !S_ISREG(file->mode)) {
-		rprintf(FINFO, "make_bak: skipping non-regular file %s\n", fname);
+		rprintf(FINFO, "make_backup: skipping non-regular file %s\n", fname);
 		unmake_file(file);
 #ifdef SUPPORT_ACLS
 		uncache_tmp_acls();
@@ -318,7 +318,7 @@ int make_backup(const char *fname, BOOL prefer_rename)
 	/* Copy to backup tree if a file. */
 	if (!ret) {
 		if (copy_file(fname, buf, -1, file->mode) < 0) {
-			rsyserr(FERROR, errno, "keep_backup failed: %s -> \"%s\"",
+			rsyserr(FERROR, errno, "make_backup failed: %s -> \"%s\"",
 				full_fname(fname), buf);
 			unmake_file(file);
 #ifdef SUPPORT_ACLS
